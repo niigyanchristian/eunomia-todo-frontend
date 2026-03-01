@@ -1,6 +1,75 @@
+/*
+ * Visual Testing Checklist:
+ * - [ ] App is centered on desktop with max-width 600px
+ * - [ ] System font stack is applied correctly
+ * - [ ] Layout remains centered on tablets (768px)
+ * - [ ] Layout fills screen on mobile (< 768px)
+ * - [ ] Padding adjusts appropriately on small screens (320px+)
+ * - [ ] All interactive elements are accessible via keyboard
+ * - [ ] Spacing between sections is consistent
+ */
+
 #root {
-  max-width: 1280px;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 2rem;
   text-align: center;
+  line-height: 1.2;
+}
+
+.card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  #root {
+    padding: 1.5rem 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #root {
+    padding: 1rem 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    gap: 1rem;
+  }
+}
+
+/* Ensure minimum width support for very small screens */
+@media (max-width: 320px) {
+  #root {
+    padding: 0.75rem 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
 }
