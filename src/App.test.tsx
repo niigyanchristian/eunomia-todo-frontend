@@ -325,7 +325,7 @@ describe('App Component', () => {
       expect(screen.getByText('2 items left')).toBeInTheDocument();
 
       // Find and click checkbox for an active todo to mark it complete
-      const checkboxes = screen.getAllByRole('checkbox');
+      const checkboxes = await screen.findAllByRole('checkbox');
       const firstActiveCheckbox = checkboxes.find(cb => !(cb as HTMLInputElement).checked);
 
       if (firstActiveCheckbox) {
