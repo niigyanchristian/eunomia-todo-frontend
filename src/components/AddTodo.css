@@ -1,61 +1,152 @@
+/*
+ * Visual Testing Checklist:
+ * - [ ] Input has clear focus state for accessibility
+ * - [ ] Button has hover state (darker background)
+ * - [ ] Button has active/pressed state
+ * - [ ] Disabled states are visually distinct
+ * - [ ] Form stacks properly on mobile
+ * - [ ] Touch targets are at least 44px on mobile
+ * - [ ] Error message is clearly visible
+ */
+
 .add-todo {
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
 }
 
 .add-todo form {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   width: 100%;
 }
 
 .add-todo-input {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1rem;
   font-size: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   border: 2px solid #e0e0e0;
-  border-radius: 4px;
-  transition: border-color 0.2s;
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: white;
+}
+
+.add-todo-input:hover:not(:disabled) {
+  border-color: #c0c0c0;
 }
 
 .add-todo-input:focus {
   outline: none;
   border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.1);
 }
 
 .add-todo-input:disabled {
   background-color: #f5f5f5;
   cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.add-todo-input::placeholder {
+  color: #999;
 }
 
 .add-todo-button {
-  padding: 0.75rem 1.5rem;
+  padding: 0.875rem 1.75rem;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   color: white;
   background-color: #646cff;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
   min-width: 100px;
+  white-space: nowrap;
 }
 
 .add-todo-button:hover:not(:disabled) {
   background-color: #535bf2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(100, 108, 255, 0.3);
+}
+
+.add-todo-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(100, 108, 255, 0.2);
+}
+
+.add-todo-button:focus {
+  outline: 2px solid #646cff;
+  outline-offset: 2px;
 }
 
 .add-todo-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
 }
 
 .add-todo-error {
-  margin-top: 0.5rem;
-  padding: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 0.875rem 1rem;
   color: #d32f2f;
   background-color: #ffebee;
+  border: 1px solid #ffcdd2;
   border-left: 4px solid #d32f2f;
-  border-radius: 4px;
-  font-size: 0.875rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 480px) {
+  .add-todo form {
+    gap: 0.5rem;
+  }
+
+  .add-todo-input {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.9375rem;
+  }
+
+  .add-todo-button {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9375rem;
+    min-width: 80px;
+  }
+
+  .add-todo-error {
+    margin-top: 0.625rem;
+    padding: 0.75rem 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .add-todo form {
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .add-todo-input,
+  .add-todo-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    min-height: 44px; /* Ensure touch-friendly target */
+  }
+
+  .add-todo-button {
+    min-width: unset;
+  }
+
+  .add-todo-error {
+    margin-top: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8125rem;
+  }
 }

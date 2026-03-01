@@ -1,17 +1,29 @@
+/*
+ * Visual Testing Checklist:
+ * - [ ] Tabs are centered and evenly spaced
+ * - [ ] Active tab has clear visual indicator
+ * - [ ] Hover states work on all tabs
+ * - [ ] Focus states are visible for accessibility
+ * - [ ] Tabs stack or shrink appropriately on mobile
+ */
+
 .filter-tabs {
   display: flex;
   justify-content: center;
   gap: 0;
-  margin: 1.5rem 0;
+  margin: 0;
   border-bottom: 2px solid #e0e0e0;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
 }
 
 .filter-tab {
   background: none;
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.875rem 1.75rem;
   font-size: 1rem;
   font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   color: #666;
   cursor: pointer;
   position: relative;
@@ -26,38 +38,46 @@
 }
 
 .filter-tab.active {
-  color: #2563eb;
-  border-bottom-color: #2563eb;
+  color: #646cff;
+  border-bottom-color: #646cff;
   font-weight: 600;
+  background-color: rgba(100, 108, 255, 0.05);
 }
 
 .filter-tab:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: inset 0 0 0 2px rgba(100, 108, 255, 0.2);
 }
 
 .filter-tab:focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
+  outline: 2px solid #646cff;
+  outline-offset: -2px;
 }
 
 /* Mobile responsive design */
 @media (max-width: 640px) {
   .filter-tabs {
     gap: 0;
-    margin: 1rem 0;
+    margin: 0;
   }
 
   .filter-tab {
-    padding: 0.625rem 1rem;
-    font-size: 0.875rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9375rem;
     flex: 1;
   }
 }
 
 @media (max-width: 480px) {
   .filter-tab {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.813rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .filter-tab {
+    padding: 0.625rem 0.5rem;
+    font-size: 0.8125rem;
   }
 }
