@@ -3,6 +3,7 @@ import AddTodo from './components/AddTodo'
 import TodoList from './components/TodoList'
 import FilterTabs, { FilterType } from './components/FilterTabs'
 import ItemCounter from './components/ItemCounter'
+import StatsBar from './components/StatsBar'
 import { Todo } from './api/todos'
 import './App.css'
 
@@ -50,6 +51,7 @@ function App() {
           filter={currentFilter}
           onTodosChange={handleTodosChange}
         />
+        <StatsBar />
         <ItemCounter count={activeCount} />
       </div>
     </>
