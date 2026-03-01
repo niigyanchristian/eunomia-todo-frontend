@@ -1,35 +1,43 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Todo, fetchTodos, updateTodo, deleteTodo } from '../api/todos';
 import TodoItem from './TodoItem';
 import './TodoList.css';
 
 interface TodoListProps {
   refreshKey?: number;
+  filter?: 'all' | 'active' | 'completed';
+  onTodosChange?: (todos: Todo[]) => void;
 }
 
-function TodoList({ refreshKey }: TodoListProps) {
+function TodoList({ refreshKey, filter = 'all', onTodosChange }: TodoListProps) {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadTodos = async () => {
+  const loadTodos = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const fetchedTodos = await fetchTodos();
+      // Pass filter to fetchTodos based on current filter state
+      const status = filter === 'all' ? undefined : filter;
+      const fetchedTodos = await fetchTodos(status);
       setTodos(fetchedTodos);
+      // Notify parent component of todos change
+      if (onTodosChange) {
+        onTodosChange(fetchedTodos);
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load todos';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [filter, onTodosChange]);
 
   useEffect(() => {
     loadTodos();
-  }, [refreshKey]);
+  }, [refreshKey, loadTodos]);
 
   const handleToggle = async (id: number) => {
     const todo = todos.find(t => t.id === id);
@@ -37,9 +45,13 @@ function TodoList({ refreshKey }: TodoListProps) {
 
     try {
       const updatedTodo = await updateTodo(id, { completed: !todo.completed });
-      setTodos(prevTodos =>
-        prevTodos.map(t => (t.id === id ? updatedTodo : t))
-      );
+      setTodos(prevTodos => {
+        const newTodos = prevTodos.map(t => (t.id === id ? updatedTodo : t));
+        if (onTodosChange) {
+          onTodosChange(newTodos);
+        }
+        return newTodos;
+      });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to update todo';
       setError(errorMessage);
@@ -49,7 +61,13 @@ function TodoList({ refreshKey }: TodoListProps) {
   const handleDelete = async (id: number) => {
     try {
       await deleteTodo(id);
-      setTodos(prevTodos => prevTodos.filter(t => t.id !== id));
+      setTodos(prevTodos => {
+        const newTodos = prevTodos.filter(t => t.id !== id);
+        if (onTodosChange) {
+          onTodosChange(newTodos);
+        }
+        return newTodos;
+      });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to delete todo';
       setError(errorMessage);
