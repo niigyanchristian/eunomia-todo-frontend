@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import AddTodo from './components/AddTodo'
+import TodoList from './components/TodoList'
 import './App.css'
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
       <h1>Todo App</h1>
       <div className="card">
         <AddTodo onAdd={handleTodoAdded} />
-        <p>Refresh key: {refreshKey}</p>
+        <TodoList refreshKey={refreshKey} />
       </div>
     </>
   )
