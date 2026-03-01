@@ -1,16 +1,20 @@
 import { useState } from 'react'
+import AddTodo from './components/AddTodo'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const handleTodoAdded = () => {
+    setRefreshKey(prev => prev + 1)
+  }
 
   return (
     <>
-      <h1>Vite + React</h1>
+      <h1>Todo App</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+        <AddTodo onAdd={handleTodoAdded} />
+        <p>Refresh key: {refreshKey}</p>
       </div>
     </>
   )
