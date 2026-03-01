@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AddTodo from '../AddTodo';
 import * as todosApi from '../../api/todos';
+import type { Todo } from '../../api/todos';
 
 // Mock the todos API module
 vi.mock('../../api/todos', () => ({
@@ -235,11 +236,11 @@ describe('AddTodo Component', () => {
 
   it('disables input and button while submitting', async () => {
     const user = userEvent.setup();
-    let resolveCreateTodo: (value: any) => void;
+    let resolveCreateTodo: (value: Todo) => void;
     const createTodoPromise = new Promise((resolve) => {
       resolveCreateTodo = resolve;
     });
-    mockCreateTodo.mockReturnValueOnce(createTodoPromise as any);
+    mockCreateTodo.mockReturnValueOnce(createTodoPromise as Promise<Todo>);
 
     render(<AddTodo onAdd={mockOnAdd} />);
 
