@@ -8,8 +8,10 @@ import {
   createTodo,
   updateTodo,
   deleteTodo,
+  fetchStats,
   ApiError,
   type Todo,
+  type StatsResponse,
 } from '../todos';
 
 // Mock fetch globally
@@ -502,6 +504,181 @@ describe('Todo API Client', () => {
     });
   });
 
+  describe('fetchStats', () => {
+    it('should fetch stats successfully', async () => {
+      const mockStats: StatsResponse = {
+        total: 10,
+        active: 6,
+        completed: 4,
+      };
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => mockStats,
+        headers: new Headers({ 'content-type': 'application/json' }),
+      });
+
+      const result = await fetchStats();
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/todos/stats',
+        expect.objectContaining({
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        })
+      );
+      expect(result).toEqual(mockStats);
+    });
+
+    it('should handle zero stats', async () => {
+      const mockStats: StatsResponse = {
+        total: 0,
+        active: 0,
+        completed: 0,
+      };
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => mockStats,
+        headers: new Headers({ 'content-type': 'application/json' }),
+      });
+
+      const result = await fetchStats();
+
+      expect(result).toEqual(mockStats);
+      expect(result.total).toBe(0);
+      expect(result.active).toBe(0);
+      expect(result.completed).toBe(0);
+    });
+
+    it('should handle all active todos', async () => {
+      const mockStats: StatsResponse = {
+        total: 5,
+        active: 5,
+        completed: 0,
+      };
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => mockStats,
+        headers: new Headers({ 'content-type': 'application/json' }),
+      });
+
+      const result = await fetchStats();
+
+      expect(result.total).toBe(5);
+      expect(result.active).toBe(5);
+      expect(result.completed).toBe(0);
+    });
+
+    it('should handle all completed todos', async () => {
+      const mockStats: StatsResponse = {
+        total: 8,
+        active: 0,
+        completed: 8,
+      };
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => mockStats,
+        headers: new Headers({ 'content-type': 'application/json' }),
+      });
+
+      const result = await fetchStats();
+
+      expect(result.total).toBe(8);
+      expect(result.active).toBe(0);
+      expect(result.completed).toBe(8);
+    });
+
+    it('should handle large numbers', async () => {
+      const mockStats: StatsResponse = {
+        total: 999,
+        active: 500,
+        completed: 499,
+      };
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => mockStats,
+        headers: new Headers({ 'content-type': 'application/json' }),
+      });
+
+      const result = await fetchStats();
+
+      expect(result.total).toBe(999);
+      expect(result.active).toBe(500);
+      expect(result.completed).toBe(499);
+    });
+
+    it('should throw ApiError on server error', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+        text: async () => 'Failed to fetch stats',
+        headers: new Headers(),
+      });
+
+      try {
+        await fetchStats();
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        expect((error as ApiError).message).toBe('Failed to fetch stats');
+        expect((error as ApiError).status).toBe(500);
+      }
+    });
+
+    it('should throw ApiError on not found error', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        statusText: 'Not Found',
+        text: async () => 'Stats endpoint not found',
+        headers: new Headers(),
+      });
+
+      try {
+        await fetchStats();
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        expect((error as ApiError).message).toBe('Stats endpoint not found');
+      }
+    });
+
+    it('should handle network errors', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Network error'));
+
+      await expect(fetchStats()).rejects.toThrow('Network error');
+    });
+
+    it('should handle invalid JSON response', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => {
+          throw new Error('Invalid JSON');
+        },
+        headers: new Headers({ 'content-type': 'application/json' }),
+      });
+
+      try {
+        await fetchStats();
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError);
+        expect((error as ApiError).message).toBe('Invalid JSON response');
+      }
+    });
+  });
+
   describe('Interface Validation', () => {
     it('should validate Todo interface structure', () => {
       const todo: Todo = {
@@ -541,6 +718,18 @@ describe('Todo API Client', () => {
 
       expect(updates.completed).toBe(true);
       expect(updates.title).toBeUndefined();
+    });
+
+    it('should validate StatsResponse interface structure', () => {
+      const stats: StatsResponse = {
+        total: 10,
+        active: 6,
+        completed: 4,
+      };
+
+      expect(stats.total).toBeTypeOf('number');
+      expect(stats.active).toBeTypeOf('number');
+      expect(stats.completed).toBeTypeOf('number');
     });
   });
 });

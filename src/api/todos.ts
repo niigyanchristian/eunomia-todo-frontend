@@ -13,6 +13,13 @@ export interface Todo {
   updated_at: string;
 }
 
+// Stats response interface
+export interface StatsResponse {
+  total: number;
+  active: number;
+  completed: number;
+}
+
 // API base URL - can be configured via environment variables
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
@@ -122,4 +129,19 @@ export async function deleteTodo(id: number): Promise<void> {
   });
 
   await handleResponse<void>(response);
+}
+
+/**
+ * Fetch todo statistics
+ * @returns Promise with total, active, and completed counts
+ */
+export async function fetchStats(): Promise<StatsResponse> {
+  const response = await fetch(`${API_BASE_URL}/todos/stats`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return handleResponse<StatsResponse>(response);
 }
