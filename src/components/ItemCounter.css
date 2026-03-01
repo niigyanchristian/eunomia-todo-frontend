@@ -1,0 +1,34 @@
+/*
+ * Visual Testing Checklist:
+ * - [ ] Counter text is centered and readable
+ * - [ ] Font size is appropriate on all screen sizes
+ * - [ ] Spacing is consistent with other components
+ */
+
+.item-counter {
+  text-align: center;
+  color: #999;
+  font-size: 0.9375rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  padding: 1rem 0.75rem;
+  margin-top: 0;
+  line-height: 1.5;
+  border-top: 1px solid #f0f0f0;
+  background-color: #fafafa;
+  border-radius: 0 0 8px 8px;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 480px) {
+  .item-counter {
+    font-size: 0.875rem;
+    padding: 0.875rem 0.625rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .item-counter {
+    font-size: 0.8125rem;
+    padding: 0.75rem 0.5rem;
+  }
+}
