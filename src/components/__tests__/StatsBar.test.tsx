@@ -82,9 +82,11 @@ describe('StatsBar Component', () => {
     render(<StatsBar />);
 
     await waitFor(() => {
-      expect(screen.getByText('5')).toBeInTheDocument();
+      expect(screen.getByText('Total:')).toBeInTheDocument();
     });
 
+    const fiveValues = screen.getAllByText('5');
+    expect(fiveValues).toHaveLength(2);
     expect(screen.getByText('0')).toBeInTheDocument();
   });
 
