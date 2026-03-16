@@ -18,6 +18,9 @@
 - Verify commands succeed before proceeding. Check exit codes.
 - Do not run interactive commands that require user input.
 - Do not run destructive commands (rm -rf, drop tables) without explicit instruction.
+- **NEVER** use `pkill`, `killall`, `kill $(lsof ...)`, or `fuser -k` to stop servers or processes.
+  These kill ALL matching processes system-wide, including other services on this machine.
+  Only stop a process by terminating the specific task/PID you started.
 
 ## Git
 - Do not create commits unless explicitly asked.
@@ -37,14 +40,23 @@
 
 ## Screenshot Workflow
 - After making visual changes to the UI, verify your work by taking a screenshot.
-- Start the dev server using the project's start command (e.g., `npm run dev`, `python -m uvicorn`).
+- Start the dev server **as a background task** using the project's start command (e.g., `npm run dev`, `python -m uvicorn`).
 - Note the URL from the server output — do not assume a specific port.
 - Use Playwright to capture a screenshot of the running page.
 - Read the screenshot to visually evaluate the result.
 - Check: layout correctness, text readability, spacing, colors, responsive structure.
 - If the UI does not match expectations, fix the code and re-screenshot before finishing.
 - Save screenshots to `.eunomia/screenshots/developer/` relative to the project root.
-- Stop the dev server when you are done screenshotting.
+- When done, stop the dev server by terminating the **background task you started** (e.g., use TaskStop or Ctrl-C the specific task).
+
+## CRITICAL: Server Process Safety
+- **NEVER** use `pkill`, `killall`, `kill $(lsof ...)`, or `fuser -k` to stop servers.
+  These commands kill ALL matching processes system-wide, including other services
+  running on this machine that you must not interfere with.
+- **NEVER** kill processes by name (e.g., `pkill node`, `pkill -f vite`).
+- **ONLY** stop servers by terminating the specific background task you started.
+  If you started a server with the Bash tool in the background, use TaskStop with
+  that task's ID to stop it. If you used `&`, save the PID (`$!`) and `kill $PID`.
 
 ## Testing with Vitest/Jest
 - Write tests in files named `*.test.ts`, `*.test.tsx`, `*.spec.ts`, or `*.spec.tsx`.
