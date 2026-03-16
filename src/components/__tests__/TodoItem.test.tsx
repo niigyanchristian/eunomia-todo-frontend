@@ -111,7 +111,7 @@ describe('TodoItem Component', () => {
     expect(deleteButton).toHaveAttribute('aria-label', 'Delete "Test todo"');
   });
 
-  it('renders todo with description when description is provided', () => {
+  it('renders description when todo has a description', () => {
     const todoWithDescription = { ...mockTodo, description: 'A test description' };
     render(<TodoItem todo={todoWithDescription} onToggle={mockOnToggle} onDelete={mockOnDelete} />);
 
@@ -126,5 +126,27 @@ describe('TodoItem Component', () => {
     render(<TodoItem todo={longTitleTodo} onToggle={mockOnToggle} onDelete={mockOnDelete} />);
 
     expect(screen.getByText(longTitleTodo.title)).toBeInTheDocument();
+  });
+
+  it('does not call onDelete when checkbox is clicked', async () => {
+    const user = userEvent.setup();
+    const localOnDelete = vi.fn();
+    render(<TodoItem todo={mockTodo} onToggle={mockOnToggle} onDelete={localOnDelete} />);
+
+    const checkbox = screen.getByRole('checkbox');
+    await user.click(checkbox);
+
+    expect(localOnDelete).not.toHaveBeenCalled();
+  });
+
+  it('does not call onToggle when delete button is clicked', async () => {
+    const user = userEvent.setup();
+    const localOnToggle = vi.fn();
+    render(<TodoItem todo={mockTodo} onToggle={localOnToggle} onDelete={mockOnDelete} />);
+
+    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    await user.click(deleteButton);
+
+    expect(localOnToggle).not.toHaveBeenCalled();
   });
 });
