@@ -120,4 +120,15 @@ describe('TodoItem Component', () => {
 
     expect(screen.getByText(longTitleTodo.title)).toBeInTheDocument();
   });
+
+  it('does not call onDelete when checkbox is clicked', async () => {
+    const user = userEvent.setup();
+    const localOnDelete = vi.fn();
+    render(<TodoItem todo={mockTodo} onToggle={mockOnToggle} onDelete={localOnDelete} />);
+
+    const checkbox = screen.getByRole('checkbox');
+    await user.click(checkbox);
+
+    expect(localOnDelete).not.toHaveBeenCalled();
+  });
 });
