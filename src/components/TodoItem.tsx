@@ -20,6 +20,9 @@ function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
       <span className={`todo-title ${todo.completed ? 'completed' : ''}`}>
         {todo.title}
       </span>
+      {todo.description && (
+        <span className="todo-description">{todo.description}</span>
+      )}
       <button
         onClick={() => onDelete(todo.id)}
         className="todo-delete-button"
