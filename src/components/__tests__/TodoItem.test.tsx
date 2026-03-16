@@ -131,4 +131,15 @@ describe('TodoItem Component', () => {
 
     expect(localOnDelete).not.toHaveBeenCalled();
   });
+
+  it('does not call onToggle when delete button is clicked', async () => {
+    const user = userEvent.setup();
+    const localOnToggle = vi.fn();
+    render(<TodoItem todo={mockTodo} onToggle={localOnToggle} onDelete={mockOnDelete} />);
+
+    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    await user.click(deleteButton);
+
+    expect(localOnToggle).not.toHaveBeenCalled();
+  });
 });
