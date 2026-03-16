@@ -149,4 +149,10 @@ describe('TodoItem Component', () => {
 
     expect(localOnToggle).not.toHaveBeenCalled();
   });
+
+  it('does not render description when todo has no description', () => {
+    render(<TodoItem todo={mockTodo} onToggle={mockOnToggle} onDelete={mockOnDelete} />);
+
+    expect(screen.queryByRole('paragraph')).toBeNull();
+  });
 });
