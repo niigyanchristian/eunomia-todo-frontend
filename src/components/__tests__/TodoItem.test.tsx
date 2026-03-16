@@ -111,6 +111,13 @@ describe('TodoItem Component', () => {
     expect(deleteButton).toHaveAttribute('aria-label', 'Delete "Test todo"');
   });
 
+  it('renders todo with description when description is provided', () => {
+    const todoWithDescription = { ...mockTodo, description: 'A test description' };
+    render(<TodoItem todo={todoWithDescription} onToggle={mockOnToggle} onDelete={mockOnDelete} />);
+
+    expect(screen.getByText('A test description')).toBeInTheDocument();
+  });
+
   it('renders todo with long title correctly', () => {
     const longTitleTodo = {
       ...mockTodo,
